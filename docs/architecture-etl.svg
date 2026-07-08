@@ -1,0 +1,141 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1540" height="860" viewBox="0 0 1540 860" role="img" aria-labelledby="title desc">
+  <title id="title">OpenSky Flight Streaming ETL Architecture</title>
+  <desc id="desc">Streaming and micro-batch ETL architecture for aircraft position events.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#111827"/>
+    </marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+    <style>
+      .bg { fill: #f8fafc; }
+      .band1 { fill: #eff6ff; stroke: #bfdbfe; stroke-width: 1; }
+      .band2 { fill: #fff7ed; stroke: #fed7aa; stroke-width: 1; }
+      .band3 { fill: #f0fdf4; stroke: #bbf7d0; stroke-width: 1; }
+      .band4 { fill: #f5f3ff; stroke: #ddd6fe; stroke-width: 1; }
+      .box { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.5; rx: 18; filter: url(#shadow); }
+      .blue { fill: #eff6ff; stroke: #60a5fa; }
+      .orange { fill: #fff7ed; stroke: #fb923c; }
+      .green { fill: #ecfdf5; stroke: #34d399; }
+      .purple { fill: #f5f3ff; stroke: #a78bfa; }
+      .red { fill: #fef2f2; stroke: #f87171; }
+      .title { font: 700 30px Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 400 16px Arial, sans-serif; fill: #475569; }
+      .phase { font: 700 14px Arial, sans-serif; fill: #1e3a8a; letter-spacing: 1px; }
+      .label { font: 700 18px Arial, sans-serif; fill: #111827; }
+      .small { font: 400 13px Arial, sans-serif; fill: #475569; }
+      .tiny { font: 400 12px Arial, sans-serif; fill: #64748b; }
+      .metric { font: 700 13px Arial, sans-serif; fill: #0f766e; }
+      .icon { font: 700 28px Arial, sans-serif; fill: #0f172a; }
+      .arrow { stroke: #111827; stroke-width: 2.5; fill: none; marker-end: url(#arrow); }
+      .dash { stroke: #64748b; stroke-width: 2; stroke-dasharray: 6 6; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1540" height="860"/>
+  <text class="title" x="54" y="58">OpenSky Flight Tracking Streaming Pipeline</text>
+  <text class="subtitle" x="54" y="86">Event-driven ETL: live or generated aircraft state vectors flow through a Kafka-compatible broker into tested aviation marts.</text>
+
+  <rect class="band1" x="46" y="126" width="300" height="622" rx="22"/>
+  <rect class="band2" x="376" y="126" width="322" height="622" rx="22"/>
+  <rect class="band3" x="728" y="126" width="430" height="622" rx="22"/>
+  <rect class="band4" x="1188" y="126" width="306" height="622" rx="22"/>
+  <text class="phase" x="72" y="158">EVENT SOURCE + PRODUCER</text>
+  <text class="phase" x="402" y="158">STREAM BUFFER</text>
+  <text class="phase" x="754" y="158">PROCESS + MODEL</text>
+  <text class="phase" x="1214" y="158">SERVE + OBSERVE</text>
+
+  <rect class="box blue" x="80" y="194" width="232" height="126"/>
+  <text class="icon" x="106" y="236">OpenSky API</text>
+  <text class="label" x="106" y="265">Aircraft States</text>
+  <text class="small" x="106" y="290">icao24, country, lat/lon</text>
+  <text class="tiny" x="106" y="310">live API or deterministic sample</text>
+
+  <rect class="box blue" x="80" y="382" width="232" height="126"/>
+  <text class="icon" x="106" y="424">Python</text>
+  <text class="label" x="106" y="453">Producer</text>
+  <text class="small" x="106" y="478">flight_pipeline/producer.py</text>
+  <text class="tiny" x="106" y="498">normalize API states into events</text>
+
+  <rect class="box orange" x="412" y="194" width="250" height="126"/>
+  <text class="icon" x="438" y="236">Redpanda</text>
+  <text class="label" x="438" y="265">Kafka Topic</text>
+  <text class="small" x="438" y="290">opensky.aircraft_states</text>
+  <text class="tiny" x="438" y="310">durable event stream boundary</text>
+
+  <rect class="box orange" x="412" y="382" width="250" height="126"/>
+  <text class="icon" x="438" y="424">Consumer</text>
+  <text class="label" x="438" y="453">Event Sink</text>
+  <text class="small" x="438" y="478">consume_kafka.py</text>
+  <text class="tiny" x="438" y="498">Kafka to newline-delimited JSON</text>
+
+  <rect class="box green" x="762" y="194" width="176" height="126"/>
+  <text class="icon" x="788" y="236">Raw Log</text>
+  <text class="label" x="788" y="265">JSONL Files</text>
+  <text class="small" x="788" y="290">data/raw/events/</text>
+  <text class="tiny" x="788" y="310">append-friendly event store</text>
+
+  <rect class="box green" x="962" y="194" width="162" height="126"/>
+  <text class="icon" x="988" y="236">Bronze</text>
+  <text class="label" x="988" y="265">Raw Table</text>
+  <text class="small" x="988" y="290">aircraft_state_events</text>
+  <text class="tiny" x="988" y="310">schema-on-read ingestion</text>
+
+  <rect class="box green" x="762" y="382" width="176" height="126"/>
+  <text class="icon" x="788" y="424">Silver</text>
+  <text class="label" x="788" y="453">Clean Events</text>
+  <text class="small" x="788" y="478">positions_clean</text>
+  <text class="tiny" x="788" y="498">typed, valid coordinates</text>
+
+  <rect class="box purple" x="962" y="382" width="162" height="126"/>
+  <text class="icon" x="988" y="424">dbt</text>
+  <text class="label" x="988" y="453">Gold Marts</text>
+  <text class="small" x="988" y="478">country, altitude</text>
+  <text class="tiny" x="988" y="498">latest state per aircraft</text>
+
+  <rect class="box red" x="762" y="570" width="362" height="126"/>
+  <text class="icon" x="788" y="612">Quality Gate</text>
+  <text class="label" x="788" y="641">Reject Bad Event Products</text>
+  <text class="small" x="788" y="666">icao24, coordinates, speed, altitude, non-empty stream</text>
+  <text class="metric" x="788" y="686">pytest + dbt tests + reports/data_quality_report.md</text>
+
+  <rect class="box purple" x="1224" y="194" width="234" height="126"/>
+  <text class="icon" x="1250" y="236">Marts</text>
+  <text class="label" x="1250" y="265">Analytics Outputs</text>
+  <text class="small" x="1250" y="290">CSV + DuckDB gold</text>
+  <text class="tiny" x="1250" y="310">dashboard and analysis ready</text>
+
+  <rect class="box" x="1224" y="382" width="234" height="126"/>
+  <text class="icon" x="1250" y="424">Console</text>
+  <text class="label" x="1250" y="453">Stream Observability</text>
+  <text class="small" x="1250" y="478">Redpanda Console</text>
+  <text class="tiny" x="1250" y="498">topic visibility for reviewers</text>
+
+  <rect class="box" x="1224" y="570" width="234" height="126"/>
+  <text class="icon" x="1250" y="612">CI</text>
+  <text class="label" x="1250" y="641">Reproducible Build</text>
+  <text class="small" x="1250" y="666">demo -> pytest -> dbt</text>
+  <text class="tiny" x="1250" y="686">proves pipeline can be rebuilt</text>
+
+  <path class="arrow" d="M196 320 L196 382"/>
+  <path class="arrow" d="M312 445 L412 257"/>
+  <path class="arrow" d="M537 320 L537 382"/>
+  <path class="arrow" d="M662 445 L762 257"/>
+  <path class="arrow" d="M938 257 L962 257"/>
+  <path class="arrow" d="M1043 320 L850 382"/>
+  <path class="arrow" d="M938 445 L962 445"/>
+  <path class="arrow" d="M1124 445 L1224 257"/>
+  <path class="dash" d="M1043 508 L943 570"/>
+  <path class="dash" d="M1341 320 L1341 382"/>
+  <path class="dash" d="M1341 508 L1341 570"/>
+
+  <text class="tiny" x="326" y="324">publish events</text>
+  <text class="tiny" x="565" y="362">consume by group</text>
+  <text class="tiny" x="676" y="324">persist raw event log</text>
+  <text class="tiny" x="1135" y="324">serve marts</text>
+  <text class="tiny" x="984" y="552">quality blocks invalid airspace analytics</text>
+
+  <rect x="46" y="782" width="1448" height="42" rx="12" fill="#0f172a"/>
+  <text x="76" y="808" font-family="Arial, sans-serif" font-size="15" fill="#e2e8f0">Design intent: decouple event production from processing, preserve raw event replay, validate telemetry before marts, and publish analytics-ready airspace data products.</text>
+</svg>
