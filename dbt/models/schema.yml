@@ -1,0 +1,26 @@
+version: 2
+
+models:
+  - name: stg_aircraft_positions
+    description: Valid aircraft position events cleaned from OpenSky raw states.
+    columns:
+      - name: observed_at
+        tests:
+          - not_null
+      - name: icao24
+        tests:
+          - not_null
+      - name: origin_country
+        tests:
+          - not_null
+  - name: int_aircraft_latest_state
+    description: Latest known position for every aircraft.
+    columns:
+      - name: icao24
+        tests:
+          - not_null
+          - unique
+  - name: mart_country_airspace
+    description: Country-level airspace activity metrics.
+  - name: mart_altitude_distribution
+    description: Position event distribution by altitude band.

@@ -1,0 +1,16 @@
+name: opensky_flight_streaming
+version: "1.0.0"
+config-version: 2
+
+profile: opensky_flight_streaming
+
+model-paths: ["models"]
+
+models:
+  opensky_flight_streaming:
+    staging:
+      +materialized: view
+    intermediate:
+      +materialized: table
+    marts:
+      +materialized: table

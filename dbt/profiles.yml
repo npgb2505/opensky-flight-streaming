@@ -1,0 +1,7 @@
+opensky_flight_streaming:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: ../data/warehouse/opensky_streaming.duckdb
+      threads: 4
