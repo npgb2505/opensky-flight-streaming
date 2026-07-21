@@ -4,18 +4,27 @@ on:
   push:
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   pipeline:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: pip
       - name: Install dependencies
         run: pip install -r requirements.txt
-      - name: Run local streaming demo
-        run: python scripts/run_demo.py --rows 300
+      - name: Compile Python sources
+        run: python -m compileall flight_pipeline scripts tests
+      - name: Lint Python sources
+        run: ruff check flight_pipeline scripts tests
+      - name: Run reproducible streaming demo
+        run: python scripts/run_demo.py --rows 500 --invalid-events 5
       - name: Run pytest
         run: pytest -q
       - name: Run dbt
@@ -24,3 +33,10 @@ jobs:
           dbt debug --profiles-dir .
           dbt run --profiles-dir .
           dbt test --profiles-dir .
+      - name: Upload quality evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: opensky-quality-report
+          path: reports/data_quality_report.*
+          if-no-files-found: warn

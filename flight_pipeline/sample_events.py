@@ -1,16 +1,20 @@
 from __future__ import annotations
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from random import Random
-
 
 COUNTRIES = ["United States", "Germany", "France", "United Kingdom", "Japan", "Singapore", "Australia"]
 CALLSIGNS = ["UAL120", "DLH401", "AFR083", "BAW216", "JAL006", "SIA322", "QFA012"]
 
 
-def generate_events(rows: int = 250) -> list[dict]:
+def generate_events(rows: int = 250, invalid_events: int = 0) -> list[dict]:
+    if rows <= 0:
+        raise ValueError("rows must be greater than zero")
+    if invalid_events < 0 or invalid_events > rows:
+        raise ValueError("invalid_events must be between zero and rows")
+
     rng = Random(42)
-    start = datetime(2026, 7, 8, 9, 0, tzinfo=timezone.utc)
+    start = datetime(2026, 7, 8, 9, 0, tzinfo=UTC)
     events: list[dict] = []
 
     for i in range(rows):
@@ -37,4 +41,14 @@ def generate_events(rows: int = 250) -> list[dict]:
                 "source": "sample",
             }
         )
+    for i in range(invalid_events):
+        scenario = i % 4
+        if scenario == 0:
+            events[i]["longitude"] = 200.0
+        elif scenario == 1:
+            events[i]["icao24"] = None
+        elif scenario == 2:
+            events[i]["velocity"] = -1.0
+        else:
+            events[i]["baro_altitude"] = 25000.0
     return events

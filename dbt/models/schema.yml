@@ -22,5 +22,18 @@ models:
           - unique
   - name: mart_country_airspace
     description: Country-level airspace activity metrics.
+    columns:
+      - name: origin_country
+        tests: [not_null]
+      - name: aircraft_count
+        tests: [not_null]
   - name: mart_altitude_distribution
     description: Position event distribution by altitude band.
+    columns:
+      - name: altitude_band
+        tests:
+          - not_null
+          - accepted_values:
+              values: [ground, low, medium, cruise]
+      - name: position_events
+        tests: [not_null]

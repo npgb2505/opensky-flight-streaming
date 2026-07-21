@@ -84,9 +84,9 @@
 
   <rect class="box green" x="762" y="382" width="176" height="126"/>
   <text class="icon" x="788" y="424">Silver</text>
-  <text class="label" x="788" y="453">Clean Events</text>
-  <text class="small" x="788" y="478">positions_clean</text>
-  <text class="tiny" x="788" y="498">typed, valid coordinates</text>
+  <text class="label" x="788" y="453">Clean + Quarantine</text>
+  <text class="small" x="788" y="478">accepted + rejected</text>
+  <text class="tiny" x="788" y="498">typed data or failure reason</text>
 
   <rect class="box purple" x="962" y="382" width="162" height="126"/>
   <text class="icon" x="988" y="424">dbt</text>
@@ -97,8 +97,8 @@
   <rect class="box red" x="762" y="570" width="362" height="126"/>
   <text class="icon" x="788" y="612">Quality Gate</text>
   <text class="label" x="788" y="641">Reject Bad Event Products</text>
-  <text class="small" x="788" y="666">icao24, coordinates, speed, altitude, non-empty stream</text>
-  <text class="metric" x="788" y="686">pytest + dbt tests + reports/data_quality_report.md</text>
+  <text class="small" x="788" y="666">9 gates: telemetry, reconciliation, uniqueness, marts</text>
+  <text class="metric" x="788" y="686">pytest + dbt + Markdown/JSON quality evidence</text>
 
   <rect class="box purple" x="1224" y="194" width="234" height="126"/>
   <text class="icon" x="1250" y="236">Marts</text>

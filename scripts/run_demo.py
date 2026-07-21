@@ -5,7 +5,6 @@ import subprocess
 import sys
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -16,9 +15,23 @@ def run(args: list[str]) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Run the local OpenSky streaming demo.")
     parser.add_argument("--rows", type=int, default=250)
+    parser.add_argument("--invalid-events", type=int, default=5)
     args = parser.parse_args()
 
-    run(["-m", "flight_pipeline.producer", "--mode", "sample", "--sink", "jsonl", "--rows", str(args.rows)])
+    if args.invalid_events < 0 or args.invalid_events > args.rows:
+        parser.error("--invalid-events must be between zero and --rows")
+    run([
+        "-m",
+        "flight_pipeline.producer",
+        "--mode",
+        "sample",
+        "--sink",
+        "jsonl",
+        "--rows",
+        str(args.rows),
+        "--invalid-events",
+        str(args.invalid_events),
+    ])
     run(["-m", "flight_pipeline.build_marts"])
     run(["-m", "flight_pipeline.data_quality"])
 

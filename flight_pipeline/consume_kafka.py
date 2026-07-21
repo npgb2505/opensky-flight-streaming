@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
-
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -21,6 +21,9 @@ def main() -> None:
 
     target = ROOT / args.output
     target.parent.mkdir(parents=True, exist_ok=True)
+    if args.max_messages <= 0:
+        parser.error("--max-messages must be greater than zero")
+    temporary = target.with_suffix(target.suffix + ".part")
 
     consumer = KafkaConsumer(
         args.topic,
@@ -33,7 +36,7 @@ def main() -> None:
     )
 
     count = 0
-    with target.open("w", encoding="utf-8") as fh:
+    with temporary.open("w", encoding="utf-8") as fh:
         for message in consumer:
             fh.write(json.dumps(message.value) + "\n")
             count += 1
@@ -41,6 +44,7 @@ def main() -> None:
                 break
 
     consumer.close()
+    os.replace(temporary, target)
     print(f"Wrote {count} Kafka messages to {target}")
 
 
